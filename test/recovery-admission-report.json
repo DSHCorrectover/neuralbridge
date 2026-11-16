@@ -1,13 +1,15 @@
 {
  "ts": "2026-11-16",
- "vectors": 108,
- "table_vs_checker_agreement": 108,
+ "suite": "recovery-admission-v2",
+ "vectors": 288,
+ "dimensions": "principal(2)x chain-shape(2)x tail(2)x version(3)x side-effect(4)x runtime(3)",
+ "table_vs_checker_agreement": 288,
  "action_distribution": {
-  "ALLOW": 12,
-  "HOLD": 4,
-  "DOWNGRADE": 2,
-  "REFUSES": 86,
-  "ESCALATE": 4
+  "ALLOW": 24,
+  "HOLD": 8,
+  "DOWNGRADE": 4,
+  "REFUSES": 244,
+  "ESCALATE": 8
  },
  "status": "PASS"
 }
