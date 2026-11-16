@@ -1,0 +1,3678 @@
+{
+ "suite": "recovery-admission-v1",
+ "claim": "pre-execution admission on identity+version+side-effect+runtime; post-execution verification",
+ "vectors": [
+  {
+   "name": "subject-match|exact|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|exact|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|exact|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "HOLD",
+   "expected_reason": "intent-hash-preserved-no-silent-rewrite"
+  },
+  {
+   "name": "subject-match|exact|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|exact|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "DOWNGRADE",
+   "expected_reason": "scope-reduced-retry"
+  },
+  {
+   "name": "subject-match|exact|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "HOLD",
+   "expected_reason": "intent-hash-preserved-no-silent-rewrite"
+  },
+  {
+   "name": "subject-match|exact|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "failover-sbsr-rebind"
+  },
+  {
+   "name": "subject-match|exact|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "failover-without-fresh-sbsr"
+  },
+  {
+   "name": "subject-match|exact|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "failover-sbsr-rebind"
+  },
+  {
+   "name": "subject-match|exact|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "irreversible-fresh-exact"
+  },
+  {
+   "name": "subject-match|exact|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ESCALATE",
+   "expected_reason": "irreversible-needs-human-proposal"
+  },
+  {
+   "name": "subject-match|exact|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "irreversible-fresh-exact"
+  },
+  {
+   "name": "subject-match|patch|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|patch|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|patch|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "HOLD",
+   "expected_reason": "intent-hash-preserved-no-silent-rewrite"
+  },
+  {
+   "name": "subject-match|patch|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "clean"
+  },
+  {
+   "name": "subject-match|patch|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "DOWNGRADE",
+   "expected_reason": "scope-reduced-retry"
+  },
+  {
+   "name": "subject-match|patch|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "HOLD",
+   "expected_reason": "intent-hash-preserved-no-silent-rewrite"
+  },
+  {
+   "name": "subject-match|patch|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "failover-sbsr-rebind"
+  },
+  {
+   "name": "subject-match|patch|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "failover-without-fresh-sbsr"
+  },
+  {
+   "name": "subject-match|patch|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "ALLOW",
+   "expected_reason": "failover-sbsr-rebind"
+  },
+  {
+   "name": "subject-match|patch|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ESCALATE",
+   "expected_reason": "irreversible-needs-human-proposal"
+  },
+  {
+   "name": "subject-match|patch|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "ESCALATE",
+   "expected_reason": "irreversible-needs-human-proposal"
+  },
+  {
+   "name": "subject-match|patch|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "ESCALATE",
+   "expected_reason": "irreversible-needs-human-proposal"
+  },
+  {
+   "name": "subject-match|major-drift|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "subject-match|major-drift|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "version-unauthorized"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|exact|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|patch|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|readonly|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|readonly|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|readonly|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|state-write|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|state-write|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|state-write|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|failover|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|failover|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|failover|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|irreversible|fresh",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|irreversible|stale",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "chain-tail-mismatch|major-drift|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": true,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-x"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "delegation-unresolved"
+  },
+  {
+   "name": "revoked-subject|exact|readonly|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|readonly|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|readonly|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|state-write|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|state-write|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|state-write|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|failover|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|failover|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|failover|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|irreversible|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|irreversible|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|exact|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.2"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|readonly|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|readonly|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|readonly|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|state-write|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|state-write|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|state-write|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|failover|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|failover|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|failover|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|irreversible|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|irreversible|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|patch|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "1.4.3"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|readonly|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|readonly|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|readonly|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "readonly",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|state-write|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|state-write|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|state-write|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "state-write",
+    "reversible": true,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|failover|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|failover|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|failover|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "failover",
+    "reversible": true,
+    "scope_delta": 1
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|irreversible|fresh",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|irreversible|stale",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 90000,
+    "settled_minus_rev_ms": 80000,
+    "freshness_window_ms": 60000,
+    "upstream_ok": true
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  },
+  {
+   "name": "revoked-subject|major-drift|irreversible|upstream-down",
+   "identity": {
+    "principal_ok": false,
+    "delegation_chain": [
+     [
+      "org",
+      "agent-a"
+     ],
+     [
+      "agent-a",
+      "agent-b"
+     ]
+    ],
+    "agent_id_preimage": "agent-b"
+   },
+   "tool_version": {
+    "approved": "1.4.2",
+    "dispatched": "2.0.0"
+   },
+   "recovery_action": {
+    "class": "irreversible",
+    "reversible": false,
+    "scope_delta": 0
+   },
+   "runtime": {
+    "settled_minus_auth_ms": 1200,
+    "settled_minus_rev_ms": 800,
+    "freshness_window_ms": 60000,
+    "upstream_ok": false
+   },
+   "expected_action": "REFUSES",
+   "expected_reason": "identity-revoked"
+  }
+ ]
+}

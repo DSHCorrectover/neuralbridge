@@ -1,0 +1,13 @@
+{
+ "ts": "2026-11-16",
+ "vectors": 108,
+ "table_vs_checker_agreement": 108,
+ "action_distribution": {
+  "ALLOW": 12,
+  "HOLD": 4,
+  "DOWNGRADE": 2,
+  "REFUSES": 86,
+  "ESCALATE": 4
+ },
+ "status": "PASS"
+}
