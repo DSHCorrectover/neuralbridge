@@ -1,0 +1,31 @@
+{
+ "ts": "2026-11-16",
+ "corpus": {
+  "name": "mcp-atlas milestone-a-v1 server_tools.jsonl.gz",
+  "sha256": "2350dc773dc43fd6ed0b012588f3ff295fb358106a0291a7dc59c57427f5780f",
+  "tools": 229827,
+  "servers": 13120,
+  "source": "DSHCorrectover/mcp-atlas (SHA-verified at download)"
+ },
+ "layer1_in_process_full_census": {
+  "tools_processed": 229827,
+  "schema_synthesis_failures": 0,
+  "args_digest_selfcheck_issues": 0,
+  "receipt_chain_issues": 0,
+  "seconds": 24.7
+ },
+ "layer2_e2e_sampled": {
+  "tools": 2000,
+  "digest_match": 2000,
+  "digest_mismatch": 0,
+  "no_receipt": 0,
+  "errors": 0,
+  "seconds": 0.6,
+  "concurrency": 20
+ },
+ "claims_supported": [
+  "Gateway receipt engine handles the full public MCP tool census (229,827 tools) with zero synthesis/digest/chain failures",
+  "In-process engine and live HTTP gateway produce byte-identical args_digest for the same tool+args (2000/2000 sampled)",
+  "Schema-driven args synthesis respects required/types/bounds across 13,120 servers' schema diversity"
+ ]
+}

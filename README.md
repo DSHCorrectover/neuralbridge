@@ -38,6 +38,16 @@ and the runtime tool-binding vectors in
 - **Hash chain**: edit one receipt and every receipt after it stops verifying
 - **Layer separation per -05 §5.2**: the gateway is the write-time enforcement point; post-hoc verification is anyone's, offline
 
+## Scale evidence
+
+The receipt engine replays the **entire public MCP tool census** — 229,827 tools
+across 13,120 servers ([mcp-atlas](https://github.com/DSHCorrectover/mcp-atlas),
+SHA-256 `2350dc77…`) — with **zero** synthesis, digest, or chain failures
+(24.7 s, single process). 2,000-tool live-gateway sample: byte-identical
+`args_digest` 2000/2000. Report: [`test/scale-report.json`](test/scale-report.json).
+The corpus is not our own fixtures — it is every tool schema published in the
+ecosystem, which is exactly what a receipt layer has to survive.
+
 ## Roadmap
 
 - [x] v0.1 gateway: MCP proxy + allowlist + signed receipt chain (this repo, working)

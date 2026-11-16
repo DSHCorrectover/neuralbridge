@@ -16,6 +16,7 @@ between our marketing and our CI.
 | 6 | Breaker: sustained failure trips; rejection is a structured receipt (dignified refusal), not bare 503 | oracle B1/B2 (reason=breaker-open-cooldown-Ns + correlation_id) | PASS |
 | 7 | Half-open single probe recovers; no retry storm | oracle B3 | PASS |
 | 8 | Receipt chain continuity across healthy/fail/breaker/recover | oracle C1: every edge receipt prev_hash anchored in chain.jsonl | PASS (11 chain entries, 0 unanchored) |
+| 9S | Receipt engine scales to the full public MCP tool census (229,827 tools, SHA 2350dc77) with zero synthesis/digest/chain failures; live-gateway digests byte-identical on 2000-tool sample | `test/scale-harness.mjs` + `test/scale-e2e.mjs`; report: `test/scale-report.json` | PASS (0/0/0 failures; 2000/2000 match) |
 | 9 | L2 semantic-equivalent downgrade exists | **NOT YET CLAIMED** — receipts reserve `l2_downgraded` field; claim pending embedding-similarity criterion | reserved, not claimed |
 | 10 | L3 failover preserves receipt chain | **NOT YET CLAIMED** — same discipline | reserved, not claimed |
 
