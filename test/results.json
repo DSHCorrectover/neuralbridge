@@ -1,0 +1,106 @@
+{
+ "ts": "2026-11-16T09:50:29.583Z",
+ "dirs": 66,
+ "dirsOk": 64,
+ "dirsFail": 2,
+ "checksRun": 44,
+ "checksPass": 42,
+ "checksFail": 2,
+ "skipped": 13,
+ "skip_log": [
+  {
+   "d": "01-allow",
+   "check": "hash:runtime_context_hash-matches",
+   "detail": "no artifact for runtime_context_hash"
+  },
+  {
+   "d": "01-allow",
+   "check": "hash:config_hash-matches",
+   "detail": "no artifact for config_hash"
+  },
+  {
+   "d": "02-deny-pre-admission",
+   "check": "hash:runtime_context_hash-matches",
+   "detail": "no artifact for runtime_context_hash"
+  },
+  {
+   "d": "02-deny-pre-admission",
+   "check": "hash:config_hash-matches",
+   "detail": "no artifact for config_hash"
+  },
+  {
+   "d": "02-deny-pre-admission",
+   "check": "cross-field:block-envelope-present",
+   "detail": "unknown cross-field spec"
+  },
+  {
+   "d": "04-tampered-negative",
+   "check": "signature:ed25519-INVALID",
+   "detail": "no sig/input files"
+  },
+  {
+   "d": "05-cross-field-semantic/05a-invalid-timestamp-month13",
+   "check": "timestamp:IMPOSSIBLE-DATE",
+   "detail": "unknown timestamp spec"
+  },
+  {
+   "d": "05-cross-field-semantic/05b-sandbox-flag-mismatch",
+   "check": "cross-field:sandbox-flag-mismatch",
+   "detail": "unknown cross-field spec"
+  },
+  {
+   "d": "05-cross-field-semantic/05c-response-hash-mismatch",
+   "check": "hash:response_hash-MISMATCH",
+   "detail": "no artifact for response_hash-MISMATCH"
+  },
+  {
+   "d": "05-cross-field-semantic/05d-verdict-response-inconsistency",
+   "check": "cross-field:verdict-response-INCONSISTENT",
+   "detail": "unknown cross-field spec"
+  },
+  {
+   "d": "06-l2-behavior/06a-behavior-not-observed",
+   "check": "structure:15-fields",
+   "detail": "unknown structure spec"
+  },
+  {
+   "d": "06-l2-behavior/06a-behavior-not-observed",
+   "check": "signature:ed25519",
+   "detail": "unknown signature spec"
+  },
+  {
+   "d": "06-l2-behavior/06a-behavior-not-observed",
+   "check": "l2:linked-l1-digest-matches",
+   "detail": "unknown check family: l2"
+  }
+ ],
+ "failures": [
+  {
+   "d": "01-allow",
+   "f": "receipt.json",
+   "check": "hash:request_hash-matches",
+   "ok": false,
+   "detail": "recv=55a300ad27 calc=da6efa9bc6"
+  },
+  {
+   "d": "02-deny-pre-admission",
+   "f": "receipt.json",
+   "check": "hash:request_hash-matches",
+   "ok": false,
+   "detail": "recv=06c97af982 calc=a42c496bf5"
+  }
+ ],
+ "corpus_drift_finding": {
+  "what": "v1.4.0-conformance/01-allow & 02-deny: receipt.request_hash does not reproduce from generator source formula (sha256(JCS({tool,_id,args})))",
+  "calc": "6b374baff52c",
+  "receipt": "55a300ad27d7",
+  "reproduced_with": "rfc8785 (RFC8785 JCS) exact generator formula from scripts/generate_vectors.py lines 124-126",
+  "same_family_checks_match": [
+   "params_hash",
+   "args_digest",
+   "response_hash"
+  ],
+  "verdict": "generator source and shipped vectors are out of sync for request_hash \u2014 same failure class as external errata we file upstream",
+  "date": "2026-11-16"
+ }
+}

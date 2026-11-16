@@ -1,0 +1,54 @@
+{
+ "ts": "2026-11-16T09:56:50.306Z",
+ "oracle": "fault-oracle v0.1 (black-box HTTP)",
+ "gateway": "http://localhost:8090/mcp",
+ "upstream_mock": ":9001",
+ "claims": [
+  {
+   "id": "C0",
+   "claim": "healthy call returns 200 + CCS receipt header",
+   "verdict": "PASS",
+   "detail": "status=200 receipt=b324a9df"
+  },
+  {
+   "id": "A1",
+   "claim": "L1 retry: failing upstream gets re-hit (backoff attempts)",
+   "verdict": "PASS",
+   "detail": "upstream hits=9"
+  },
+  {
+   "id": "A2",
+   "claim": "L1 exhaust: final response still carries a receipt (fail-closed chain, no naked 5xx)",
+   "verdict": "PASS",
+   "detail": "status=500 verdict=ALLOW"
+  },
+  {
+   "id": "B1",
+   "claim": "breaker trips: next call rejected with structured receipt, not naked 503",
+   "verdict": "PASS",
+   "detail": "status=503 reason=breaker-open-cooldown-3s"
+  },
+  {
+   "id": "B2",
+   "claim": "dignified refusal: rejection receipt contains breaker/ cooldown reason + correlation_id",
+   "verdict": "PASS",
+   "detail": "reason=breaker-open-cooldown-3s"
+  },
+  {
+   "id": "B3",
+   "claim": "after cooldown, single probe passes and chain continues",
+   "verdict": "PASS",
+   "detail": "status=200 verdict=ALLOW"
+  },
+  {
+   "id": "C1",
+   "claim": "receipt chain continuity: every edge receipt prev_hash anchored + every edge receipt in chain log",
+   "verdict": "PASS",
+   "detail": "chain_entries=11 edge=4 present=4 unanchored=0"
+  }
+ ],
+ "summary": {
+  "pass": 7,
+  "fail": 0
+ }
+}

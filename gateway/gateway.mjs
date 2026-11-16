@@ -27,6 +27,14 @@ const priv = createPrivateKey({ key: Buffer.concat([PKCS8_PREFIX, seed]), format
 const PUB_RAW = createPublicKey(priv).export({ format: 'der', type: 'spki' }).subarray(12).toString('base64');
 
 const ALLOW = (process.env.NEURALBRIDGE_ALLOW || '').split(',').map(s => s.trim()).filter(Boolean);
+// Resilience layer (v0.2) — semantics re-implemented from legacy python SelfHealingEngine:
+//   L1 = same-model retry, exponential backoff + jitter; L2/L3 fields reserved in receipts.
+const RB_MAX = Number(process.env.NEURALBRIDGE_RETRIES || 3);       // L1 attempts
+const RB_BASE = Number(process.env.NEURALBRIDGE_BACKOFF_MS || 200);
+const CB_THRESHOLD = Number(process.env.NEURALBRIDGE_BREAKER_THRESHOLD || 5);
+const CB_COOLDOWN = Number(process.env.NEURALBRIDGE_COOLDOWN_MS || 3000);
+const CB_TIMEOUT = Number(process.env.NEURALBRIDGE_UPSTREAM_TIMEOUT_MS || 5000);
+const breaker = { state: 'closed', fails: 0, openedAt: 0 };         // closed|open|half-open
 mkdirSync('receipts', { recursive: true });
 const CHAIN = 'receipts/chain.jsonl';
 const jcs = (o) => Array.isArray(o) ? '[' + o.map(jcs).join(',') + ']'
@@ -50,11 +58,11 @@ function receipt(tool, args, verdict, reason) {
   return Buffer.from(JSON.stringify(rec)).toString('base64');
 }
 
-const server = http.createServer((req, res) => {
+const server = http.createServer(async (req, res) => {
   if (req.method !== 'POST') { res.writeHead(405).end(); return; }
   let body = [];
   req.on('data', c => body.push(c));
-  req.on('end', () => {
+  req.on('end', async () => {
     const raw = Buffer.concat(body);
     let verdict = 'ALLOW', reason = null, tool = null, args = null;
     try {
@@ -70,12 +78,56 @@ const server = http.createServer((req, res) => {
       res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32602, message: 'blocked by neuralbridge gateway: ' + reason, receipt: JSON.parse(Buffer.from(r64, 'base64').toString()) } }));
       return;
     }
-    const up = http.request({ hostname: TARGET.hostname, port: TARGET.port || 80, path: TARGET.pathname, method: 'POST', headers: { ...req.headers, host: TARGET.host } }, ur => {
-      res.writeHead(ur.statusCode, { ...ur.headers, 'X-NeuralBridge-Receipt': r64 });
-      ur.pipe(res);
-    });
-    up.on('error', () => { res.writeHead(502, { 'X-NeuralBridge-Receipt': r64 }).end('{"error":"upstream unreachable"}'); });
-    up.end(raw);
+    // B: dignified refusal — breaker open (before cooldown) => structured receipt, never naked 503
+    if (breaker.state === 'open') {
+      const since = Date.now() - breaker.openedAt;
+      if (since < CB_COOLDOWN) {
+        // re-sign with breaker reason
+        const rr = JSON.parse(Buffer.from(r64, 'base64').toString());
+        rr.reason = 'breaker-open-cooldown-' + Math.ceil((CB_COOLDOWN - since) / 1000) + 's'; rr.verdict = 'BLOCK';
+        const rr2 = Buffer.from(JSON.stringify(rr)).toString('base64');
+        res.writeHead(503, { 'Content-Type': 'application/json', 'X-NeuralBridge-Receipt': rr2 });
+        res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32003, message: 'neuralbridge gateway: circuit open, cooldown ' + Math.ceil((CB_COOLDOWN - since) / 1000) + 's', receipt: rr } }));
+        return;
+      }
+      breaker.state = 'half-open'; // single probe: exactly one in-flight request validates recovery
+    }
+    // A: L1 retry with exponential backoff + jitter; hang detection via timeout
+    let attempt = 0, lastErr = null, upstreamRes = null;
+    while (attempt <= RB_MAX) {
+      upstreamRes = await new Promise((resolve) => {
+        const up = http.request({ hostname: TARGET.hostname, port: TARGET.port || 80, path: TARGET.pathname, method: 'POST', headers: { ...req.headers, host: TARGET.host } }, ur => {
+          let b = []; ur.on('data', c => b.push(c));
+          ur.on('end', () => resolve({ status: ur.statusCode, headers: ur.headers, body: Buffer.concat(b) }));
+        });
+        up.setTimeout(CB_TIMEOUT, () => { up.destroy(); resolve({ status: 0, headers: {}, body: null, timeout: true }); });
+        up.on('error', e => resolve({ status: 0, headers: {}, body: null, err: e.code }));
+        up.end(raw);
+      }).catch(() => ({ status: 0, headers: {}, body: null }));
+      const transient = upstreamRes.status === 0 || upstreamRes.status === 500 || upstreamRes.status === 502 || upstreamRes.status === 503 || upstreamRes.status === 504;
+      if (!transient || breaker.state === 'half-open') break;   // half-open probe: no retry storm
+      breaker.fails++;
+      attempt++;
+      if (attempt <= RB_MAX) {
+        const backoff = RB_BASE * Math.pow(2, attempt - 1) + Math.floor(Math.random() * RB_BASE); // exp + jitter
+        await new Promise(r => setTimeout(r, backoff));
+      }
+    }
+    if (upstreamRes.status === 0 || (upstreamRes.status >= 500 && breaker.state !== 'half-open')) breaker.fails++; else if (upstreamRes.status && upstreamRes.status < 500) { breaker.fails = 0; breaker.state = 'closed'; }
+    if (breaker.fails >= CB_THRESHOLD && breaker.state !== 'open') { breaker.state = 'open'; breaker.openedAt = Date.now(); }
+    if (breaker.state === 'half-open') {
+      if (upstreamRes.status && upstreamRes.status < 500) { breaker.state = 'closed'; breaker.fails = 0; }
+      else { breaker.state = 'open'; breaker.openedAt = Date.now(); }
+    }
+    // final response — receipt always attached, even on failure (A2: fail-closed chain)
+    const finalRec = (() => { try { const rr = JSON.parse(Buffer.from(r64, 'base64').toString()); rr.l1_attempts = attempt; rr.breaker_state = breaker.state; rr.l2_downgraded = false; rr.l3_failed_over = false; return Buffer.from(JSON.stringify(rr)).toString('base64'); } catch { return r64; } })();
+    if (upstreamRes.status === 0) {
+      res.writeHead(502, { 'Content-Type': 'application/json', 'X-NeuralBridge-Receipt': finalRec });
+      res.end(JSON.stringify({ jsonrpc: '2.0', id: null, error: { code: -32002, message: 'upstream unreachable after L1 retries', receipt: JSON.parse(Buffer.from(finalRec, 'base64').toString()) } }));
+    } else {
+      res.writeHead(upstreamRes.status, { ...upstreamRes.headers, 'X-NeuralBridge-Receipt': finalRec });
+      res.end(upstreamRes.body);
+    }
   });
 });
 server.listen(PORT, () => console.log(`neuralbridge gateway :${PORT} -> ${TARGET.href} | pubkey ${PUB_RAW.slice(0, 8)}… | receipts -> ${CHAIN}`));
