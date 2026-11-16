@@ -1,0 +1,35 @@
+{
+ "ts": "2026-11-16T11:07:07.891Z",
+ "corpus": {
+  "tools": 229827,
+  "servers": 13120,
+  "source": "mcp-atlas milestone-a-v1, SHA 2350dc77"
+ },
+ "protocol_compliance": {
+  "valid_object_schema": 229826,
+  "valid_pct": 100,
+  "schema_missing": 0,
+  "schema_missing_pct": 0,
+  "not_object": 1,
+  "has_required": 147075,
+  "empty_properties": 20638
+ },
+ "scope_drift": {
+  "danger_verbs_in_desc_not_in_name": 50583,
+  "danger_desc_only_pct": 22,
+  "consistent_danger": 176,
+  "note": "proxy metric: receipt layer must bind verdicts to declared scope, not description prose"
+ },
+ "description_mutation": {
+  "empty_pct": 0,
+  "mean_len": 665,
+  "duplicate_descriptions_tools": 97661,
+  "duplicate_descriptions_pct": 42.5,
+  "duplicated_tool_names_across_servers": 12132
+ },
+ "endpoint_liveness": {
+  "status": "deferred",
+  "runner": "timeout 240 node test/endpoint-probe.mjs"
+ },
+ "replay": "zcat server_tools.jsonl.gz + candidates_remotes.jsonl; script: test/census-aggregate.mjs"
+}
