@@ -1,5 +1,5 @@
 {
- "ts": "2026-11-16T11:07:07.891Z",
+ "ts": "2026-11-16T11:21:36.329Z",
  "corpus": {
   "tools": 229827,
   "servers": 13120,
@@ -28,8 +28,24 @@
   "duplicated_tool_names_across_servers": 12132
  },
  "endpoint_liveness": {
-  "status": "deferred",
-  "runner": "timeout 240 node test/endpoint-probe.mjs"
+  "ts": "2026-11-16T11:21:02.742Z",
+  "sample_of": 27488,
+  "remotes_declared": 200,
+  "probed": 200,
+  "reachable": 8,
+  "reachable_pct": 4,
+  "anonymous_200": 1,
+  "anonymous_pct": 0.5,
+  "auth_gated_401_403": 5,
+  "dead_or_timeout": 192,
+  "code_histogram": {
+   "200": 1,
+   "401": 5,
+   "405": 2,
+   "-2": 2,
+   "-1": 190
+  },
+  "method": "c-ares resolve4 + 5s per-probe + 60s global deadline, stride-200 sample"
  },
  "replay": "zcat server_tools.jsonl.gz + candidates_remotes.jsonl; script: test/census-aggregate.mjs"
 }

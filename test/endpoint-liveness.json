@@ -1,0 +1,20 @@
+{
+ "ts": "2026-11-16T11:21:02.742Z",
+ "sample_of": 27488,
+ "remotes_declared": 200,
+ "probed": 200,
+ "reachable": 8,
+ "reachable_pct": 4,
+ "anonymous_200": 1,
+ "anonymous_pct": 0.5,
+ "auth_gated_401_403": 5,
+ "dead_or_timeout": 192,
+ "code_histogram": {
+  "200": 1,
+  "401": 5,
+  "405": 2,
+  "-2": 2,
+  "-1": 190
+ },
+ "method": "c-ares resolve4 + 5s per-probe + 60s global deadline, stride-200 sample"
+}
