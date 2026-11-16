@@ -1,0 +1,68 @@
+{
+  "name": "neuralbridge-sdk",
+  "version": "1.1.0",
+  "description": "NeuralBridge — Open Core, self-healing SDK for LLM API calls. Circuit-breaker, auto-failover, multi-provider routing for TypeScript.",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "bin": {
+    "nb-doctor": "dist/cli.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "prepublishOnly": "npm run build",
+    "test": "node --import tsx --test src/**/*.test.ts",
+    "quickstart": "node --import tsx examples/quickstart.ts"
+  },
+  "keywords": [
+    "neuralbridge",
+    "llm",
+    "self-healing",
+    "failover",
+    "circuit-breaker",
+    "api-resilience",
+    "openai",
+    "anthropic",
+    "deepseek",
+    "agent",
+    "multi-provider",
+    "ai-gateway",
+    "open-core"
+  ],
+  "license": "Apache-2.0",
+  "author": "NeuralBridge Team <team@neuralbridge.dev>",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/neuralbridge-sdk/neuralbridge-sdk.git",
+    "directory": "ts"
+  },
+  "homepage": "https://neuralbridge.cn",
+  "bugs": {
+    "url": "https://github.com/neuralbridge-sdk/neuralbridge-sdk/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "funding": {
+    "type": "individual",
+    "url": "https://neuralbridge.cn/pricing"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.8.0",
+    "tsx": "^4.19.0",
+    "@types/node": "^22.0.0"
+  }
+}

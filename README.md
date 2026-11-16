@@ -42,6 +42,7 @@ and the runtime tool-binding vectors in
 
 - [x] v0.1 gateway: MCP proxy + allowlist + signed receipt chain (this repo, working)
 - [ ] v0.2: subject-bound receipts (SBSR per [mcp-session-audit](https://github.com/DSHCorrectover/mcp-session-audit) — binds session to authenticated subject, kills the Session-as-Identity swap class)
+- [ ] v0.2: legacy SelfHealingEngine integration ([archived MAPE-K engine](legacy/README.md) from npm `neuralbridge-sdk@1.1.0` — circuit breaker + bulkhead + auto-recovery around the gateway; not just fail-closed, fail-and-recover)
 - [ ] v0.3: Android/device automation bridge (NB heritage: full device hands for your agent — with receipts, unlike everything else in this category)
 - [ ] verifier integration: drop-in `ccs-verifier` (npm) one-liner to audit a chain.jsonl
 

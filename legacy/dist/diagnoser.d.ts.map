@@ -1,0 +1,1 @@
+{"version":3,"file":"diagnoser.d.ts","sourceRoot":"","sources":["../src/diagnoser.ts"],"names":[],"mappings":"AAGA,OAAO,EAAE,SAAS,EAAiB,MAAM,YAAY,CAAC;AAEtD;;;;;GAKG;AACH,qBAAa,SAAS;IACpB,qDAAqD;IACrD,QAAQ,CAAC,KAAK,EAAE,OAAO,EAAE,UAAU,CAAC,EAAE,MAAM,GAAG,SAAS;IAaxD,OAAO,CAAC,cAAc;IAUtB,OAAO,CAAC,gBAAgB;IA4BxB,OAAO,CAAC,iBAAiB;IAoDzB,OAAO,CAAC,QAAQ;IAIhB,OAAO,CAAC,IAAI;CAmBb"}
