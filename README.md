@@ -1,5 +1,7 @@
 # NeuralBridge
 
+[**Commercial verification engagements — USD 8,000–15,000, court-ready dossier**](https://dshcorrectover.github.io/correctover-recovery-admission/services.html) · [**Independent audit & conformance**](https://dshcorrectover.github.io/correctover-recovery-admission/services.html)
+
 **The gateway for the seconds between "admitted" and "answered" — where Envoy's resilience ends, 42Crunch's contract ends, and your business has not yet lost. Every tool call in that window gets a signed, chain-linked, independently verifiable receipt — and if upstream dies mid-flight, the gateway retries with backoff, trips open with a dignified signed refusal instead of a naked 503, probes back with a single request, and never breaks the receipt chain. Not just fail-closed: fail-with-evidence.**
 
 NeuralBridge gives any AI agent (Claude, GPT, Gemini, Kimi, anything speaking MCP) full hands on
